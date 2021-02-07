@@ -44,7 +44,7 @@ def replaceElement(element):
         replaceElementDate(element)
     elif element.VR == 'TM':
         element.value = '000000.00'
-    elif element.VR in ('LO', 'SH', 'PN', 'CS'):
+    elif element.VR in ('LO', 'SH', 'PN', 'CS', 'ST'):
         element.value = 'Anonymized'
     elif element.VR == 'UI':
         replaceElementUID(element)
@@ -75,7 +75,7 @@ def replace(dataset, tag):
 
 
 def emptyElement(element):
-    if (element.VR in ('SH', 'PN', 'UI', 'LO', 'CS')):
+    if (element.VR in ('SH', 'PN', 'UI', 'LO', 'CS', 'ST')):
         element.value = ''
     elif element.VR == 'DA':
         replaceElementDate(element)
@@ -236,7 +236,7 @@ def anonymizeDICOMFile(inFile, outFile, extraAnonymizationRules = None):
     :param outFile: File path or file-like object to write to
     :param extraAnonymizationRules: add more tag's actions
     """
-    dataset = pydicom.dcmread(inFile)
+    dataset = pydicom.dcmread(inFile, force = True)
 
     anonymizeDataset(dataset, extraAnonymizationRules)
 
@@ -253,4 +253,4 @@ def anonymizeDataset(dataset, extraAnonymizationRules = None):
         action(dataset, tag)
 
     # X - Private tags = (0xgggg, 0xeeee) where 0xgggg is odd
-    dataset.remove_private_tags()
+#    dataset.remove_private_tags()
